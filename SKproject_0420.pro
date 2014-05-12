@@ -41,3 +41,6 @@ FORMS    += UI/UI_MainWindow.ui \
     UI/UI_SELECT_TABLE.ui \
     UI/UI_EXPORT.ui \
     UI/UI_IMPORT.ui
+
+RESOURCES += \
+    RES/RES.qrc

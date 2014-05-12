@@ -8,65 +8,30 @@ UI_MainWindow::UI_MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->LINEEDIT_QUERY_COLUMN->setEnabled(false);
+
     connect(ui->ACTION_SELECT_TABLE, SIGNAL(triggered()), this, SLOT(ACTION_SELECT_TABLE()));
+
     connect(ui->ACTION_EXPORT, SIGNAL(triggered()), this, SLOT(ACTION_EXPORT()));
     connect(ui->ACTION_IMPORT, SIGNAL(triggered()), this, SLOT(ACTION_IMPORT()));
     connect(ui->ACTION_PRINT, SIGNAL(triggered()), this, SLOT(ACTION_PRINT()));
+
+    connect(ui->ACTION_ADD, SIGNAL(triggered()), this, SLOT(ACTION_ADD()));
+    connect(ui->ACTION_DELETE, SIGNAL(triggered()), this, SLOT(ACTION_DELETE()));
+    connect(ui->ACTION_SAVE, SIGNAL(triggered()), this, SLOT(ACTION_SAVE()));
+    connect(ui->ACTION_ABORT, SIGNAL(triggered()), this, SLOT(ACTION_ABORT()));
+    connect(ui->ACTION_REFRESH, SIGNAL(triggered()), this, SLOT(ACTION_REGRESH()));
+    connect(ui->ACTION_DELETEALL, SIGNAL(triggered()), this, SLOT(ACTION_DELETEALL()));
 
     //ui->BUTTON_TABLE_1->setVisible(false);
 
     page_size = 5;
     current_page = 0;
-
-    /*
-    model_t = new QSqlTableModel(this);
-    SET_MODEL();
-    ui->TABLEVIEW->setModel(model_t);
-    item_delegate = new ItemDelegate(this);
-    ui->TABLEVIEW->setItemDelegate(item_delegate);
-
-    query_column = model_t->headerData(0, Qt::Horizontal, Qt::DisplayRole).toString();
-    query_value = "";
-    ui->LINEEDIT_QUERY_COLUMN->setText(query_column);
-
-
-    ui->LABEL_TURN_PAGE->setText("/" + QString::number(page_num_size, 10));
-    ui->LINEEDIT_TURN_PAGE->setText(QString::number(current_page + 1, 10));
-
-    QModelIndex latest_item = model_t->index(0, 0);
-    latest_item_row = 0;
-    latest_item_column = 0;
-    //qDebug() << model_t->data(latest_item, 0);
-    latest_item_data = model_t->data(latest_item).toString();
-    */
-
-    /*
-    model_t_2 = new QSqlTableModel(this);
-    model_t_2->setTable("Well_basic");
-    model_t_2->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model_t_2->select();
-    model_t_2->setSort(0, Qt::AscendingOrder);
-    ui->tableView->setModel(model_t_2);
-    ui->tableView->setItemDelegate(item_delegate);
-    */
 }
 
 UI_MainWindow::~UI_MainWindow()
 {
     delete ui;
 }
-
-/*
-void UI_MainWindow::clickeitem(QModelIndex index)
-{
-    qDebug()<<"clicked"<<index;
-    QWidget* w=new QWidget();
-    QPalette p(Qt::green);
-
-    w->setPalette(p);
-    ui->TABLEVIEW->setIndexWidget(index, w);
-}
-*/
 
 void UI_MainWindow::init()
 {
@@ -168,7 +133,6 @@ QString UI_MainWindow::setFilterString()
     num = model_row_count - (current_page + 1) * page_size;
     if(num < 0)
         num = 0;
-    //qDebug() << num;
     number_to_string = QString::number(num, 10);
     filter_string += number_to_string;
     filter_string += " ";
@@ -192,8 +156,6 @@ QString UI_MainWindow::setFilterString()
 
 void UI_MainWindow::SET_MODEL()
 {
-    //model_t->setTable("Well");
-    //qDebug() << select_table[current_select_table];
     model_t->setTable(select_table[current_select_table]);
     model_t->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model_t->select();
@@ -225,38 +187,15 @@ void UI_MainWindow::ACTION_SELECT_TABLE()
     current_select_table = 0;
     ui->BUTTON_CURRENT_TABLE_NAME->setText(select_table[current_select_table]);
     init();
-    /*
-    model_t = new QSqlTableModel(this);
-    SET_MODEL();
-    ui->TABLEVIEW->setModel(model_t);
-    item_delegate = new ItemDelegate(this);
-    ui->TABLEVIEW->setItemDelegate(item_delegate);
-
-    query_column = model_t->headerData(0, Qt::Horizontal, Qt::DisplayRole).toString();
-    query_value = "";
-    ui->LINEEDIT_QUERY_COLUMN->setText(query_column);
-
-    ui->LABEL_TURN_PAGE->setText("/" + QString::number(page_num_size, 10));
-    ui->LINEEDIT_TURN_PAGE->setText(QString::number(current_page + 1, 10));
-
-    QModelIndex latest_item = model_t->index(0, 0);
-    latest_item_row = 0;
-    latest_item_column = 0;
-    //qDebug() << model_t->data(latest_item, 0);
-    latest_item_data = model_t->data(latest_item).toString();
-    */
 }
 
 void UI_MainWindow::ACTION_EXPORT()
 {
     model_for_export = new QSqlTableModel(this);
-    //model_for_export->setTable("Well");
     model_for_export->setTable(select_table[current_select_table]);
     model_for_export->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model_for_export->select();
     //model_for_export->setSort(0, Qt::AscendingOrder);
-
-    //qDebug() << current_page;
 
     if(query_value != "")
     {
@@ -284,6 +223,95 @@ void UI_MainWindow::ACTION_PRINT()
 
     connect(&dlg, SIGNAL(paintRequested(QPrinter*)), this, SLOT(print(QPrinter*)));
     dlg.exec();
+}
+
+void UI_MainWindow::ACTION_ADD()
+{
+    int row_num = model_t->rowCount();
+
+    model_t->insertRow(row_num);
+
+    for(int i = 0; i < model_t->columnCount(); i ++)
+    {
+        item_delegate->column.push_back(i);
+        item_delegate->row.push_back(row_num);
+    }
+}
+
+void UI_MainWindow::ACTION_DELETE()
+{
+    int row_num = ui->TABLEVIEW->currentIndex().row();
+
+    model_t->removeRow(row_num);
+
+    for(int i = 0; i < model_t->columnCount(); i ++)
+    {
+        item_delegate->column.push_back(i);
+        item_delegate->row.push_back(row_num);
+    }
+}
+
+void UI_MainWindow::ACTION_SAVE()
+{
+    model_t->database().transaction();
+    if(model_t->submitAll())
+    {
+        model_t->database().commit();
+
+        query_value = "";
+        ui->LINEEDIT_QUERY_VALUE->setText(query_value);
+        SET_MODEL();
+
+        ui->LABEL_TURN_PAGE->setText("/" + QString::number(page_num_size, 10));
+        ui->LINEEDIT_TURN_PAGE->setText(QString::number(current_page + 1, 10));
+    }
+    else
+    {
+        model_t->database().rollback();
+        QMessageBox::warning(this, tr("DataBase"), tr("DataBase Error: %1").arg(model_t->lastError().text()));
+    }
+
+    item_delegate->column.clear();
+    item_delegate->row.clear();
+}
+
+void UI_MainWindow::ACTION_ABORT()
+{
+    model_t->revertAll();
+
+    item_delegate->column.clear();
+    item_delegate->row.clear();
+}
+
+void UI_MainWindow::ACTION_REGRESH()
+{
+    query_value = "";
+    ui->LINEEDIT_QUERY_VALUE->setText(query_value);
+
+    SET_MODEL();
+    ui->LABEL_TURN_PAGE->setText("/" + QString::number(page_num_size, 10));
+    ui->LINEEDIT_TURN_PAGE->setText(QString::number(current_page + 1, 10));
+
+    item_delegate->column.clear();
+    item_delegate->row.clear();
+}
+
+void UI_MainWindow::ACTION_DELETEALL()
+{
+    int row_num = model_t->rowCount();
+    int col_num = model_t->columnCount();
+    model_t->removeRows(0, row_num);
+
+    for(int i = 0; i < row_num; i ++)
+    {
+        for(int j = 0; j < col_num; j ++)
+        {
+            item_delegate->column.push_back(i);
+            item_delegate->row.push_back(j);
+        }
+    }
+
+    ui->LABEL_TURN_PAGE->setText("/" + QString::number(page_num_size, 10));
 }
 
 void UI_MainWindow::on_BUTTON_SAVE_clicked()

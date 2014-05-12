@@ -66,6 +66,12 @@ private slots:
     void ACTION_EXPORT();
     void ACTION_IMPORT();
     void ACTION_PRINT();
+    void ACTION_ADD();
+    void ACTION_DELETE();
+    void ACTION_SAVE();
+    void ACTION_ABORT();
+    void ACTION_REGRESH();
+    void ACTION_DELETEALL();
 
     void on_BUTTON_SAVE_clicked();
     void on_BUTTON_ABORT_clicked();

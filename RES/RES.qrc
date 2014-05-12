@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/menu_bar">
+        <file>images/save.png</file>
+    </qresource>
+</RCC>
