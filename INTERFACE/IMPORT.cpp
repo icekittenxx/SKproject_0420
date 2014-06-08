@@ -42,7 +42,7 @@ void IMPORT::InsertToTable(QVector<QString> ins_column, QVector<QString> ins_val
     query.exec();
 }
 
-void IMPORT::ImportFromExcel(QVector<QVector<QString> > data, QSqlTableModel *model)
+void IMPORT::ImportFromExcel(QVector<QString> column_for_import, QVector<QVector<QString> > data, QSqlTableModel *model)
 {
     /*
     for(int i = 0; i < data.size(); i ++)
@@ -59,12 +59,28 @@ void IMPORT::ImportFromExcel(QVector<QVector<QString> > data, QSqlTableModel *mo
     int col_num = model->columnCount();
     QVector<QString> column;
 
+    /*
     for(int i = 0; i < col_num; i ++)
     {
         column.push_back(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
     }
+    */
+    column = column_for_import;
 
-    for(int i = 1; i < data.size(); i ++)
+    for(int i = 0; i < data.size(); i ++)
+    {
+        InsertToTable(column, data[i], model->tableName());
+    }
+}
+
+void IMPORT::ImportFromTxt(QVector<QString> column_for_import, QVector<QVector<QString> > data, QSqlTableModel *model)
+{
+    int col_num = model->columnCount();
+    QVector<QString> column;
+
+    column = column_for_import;
+
+    for(int i = 0; i < data.size(); i ++)
     {
         InsertToTable(column, data[i], model->tableName());
     }

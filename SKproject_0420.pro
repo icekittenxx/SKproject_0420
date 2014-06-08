@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     UI/UI_EXPORT.cpp \
     UI/UI_IMPORT.cpp \
     INTERFACE/IMPORT.cpp \
-    LOGIC/LOGIC_TABLE.cpp
+    LOGIC/LOGIC_TABLE.cpp \
+    UI/UI_IMPORT_DETAIL.cpp \
+    UI/UI_IMPORT_PREVIEW.cpp
 
 HEADERS  += UI/UI_MainWindow.h \
     DB/DB_CONNECT.h \
@@ -34,13 +36,17 @@ HEADERS  += UI/UI_MainWindow.h \
     UI/UI_EXPORT.h \
     UI/UI_IMPORT.h \
     INTERFACE/IMPORT.h \
-    LOGIC/LOGIC_TABLE.h
+    LOGIC/LOGIC_TABLE.h \
+    UI/UI_IMPORT_DETAIL.h \
+    UI/UI_IMPORT_PREVIEW.h
 
 
 FORMS    += UI/UI_MainWindow.ui \
     UI/UI_SELECT_TABLE.ui \
     UI/UI_EXPORT.ui \
-    UI/UI_IMPORT.ui
+    UI/UI_IMPORT.ui \
+    UI/UI_IMPORT_DETAIL.ui \
+    UI/UI_IMPORT_PREVIEW.ui
 
 RESOURCES += \
     RES/RES.qrc

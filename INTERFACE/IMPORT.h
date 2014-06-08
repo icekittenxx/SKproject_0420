@@ -14,7 +14,8 @@ public:
     IMPORT();
 
     void InsertToTable(QVector<QString> ins_column, QVector<QString> ins_value, QString table_name);
-    void ImportFromExcel(QVector<QVector<QString>> data, QSqlTableModel *model);
+    void ImportFromExcel(QVector<QString> column_for_import, QVector<QVector<QString>> data, QSqlTableModel *model);
+    void ImportFromTxt(QVector<QString> column_for_import, QVector<QVector<QString>> data, QSqlTableModel *model);
 };
 
 #endif // IMPORT_H

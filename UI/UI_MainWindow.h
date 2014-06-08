@@ -13,6 +13,11 @@
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintPreviewDialog>
 #include <QAxObject>
+#include <QLabel>
+#include <QTableView>
+#include <QListWidgetItem>
+#include <QPushButton>
+#include <QLineEdit>
 
 #include "UI_SELECT_TABLE.h"
 #include "UI_EXPORT.h"
@@ -34,35 +39,43 @@ public:
 private:
     Ui::UI_MainWindow *ui;
 
-    ItemDelegate *item_delegate;
-
-    QSqlTableModel *model_t;
-    QSqlTableModel *model_for_export;
-    //QSqlTableModel *model_t_2;
-
-    QString query_value, query_column;
-    int current_page, page_size, page_num_size;
-    int model_row_count;
-
-    QString latest_item_data;
-    int latest_item_row, latest_item_column;
-
     UI_EXPORT ui_export;
     UI_IMPORT ui_import;
     UI_SELECT_TABLE ui_select_table;
 
-    QVector<QString> select_table;
-    int current_select_table;
+    QSqlTableModel *model_for_export;
+
+    //------------------------------------------------------------------------------------------------
+    int tabwidget_size, tabwidget_current_page;
+    QVector<int> tabwidget_sqltable_list;
+    QVector<QString> sqltable_name;
+
+    QVector<QWidget *> tabwidget;
+    QVector<QTableView *> tab_tableview;
+    QVector<QLabel *> tab_label_1, tab_label_2, tab_label_3;
+    QVector<QLabel *> tab_label_query_column, tab_label_query_value;
+    QVector<QComboBox *> tab_combobox;
+    QVector<QPushButton *> tab_button_first_page, tab_button_last_page;
+    QVector<QPushButton *> tab_button_previous_page, tab_button_next_page;
+    QVector<QPushButton *> tab_button_turn_page;
+    QVector<QPushButton *> tab_button_close;
+    QVector<QPushButton *> tab_button_query;
+    QVector<QLineEdit *> tab_lineedit;
+    QVector<QLineEdit *> tab_lineedit_query_column, tab_lineedit_query_value;
+
+    QVector<QSqlTableModel *> tab_model;
+    QVector<int> tab_model_current_page, tab_model_page_size, tab_model_page_num_size;
+    QVector<int> tab_model_row_count;
+    QVector<QString> tab_model_query_value, tab_model_query_column;
+
+    QVector<ItemDelegate *> tab_item_delegate;
+    QVector<QString> tab_latest_item_data;
+    QVector<int> tab_latest_item_row, tab_latest_item_column;
 
 private slots:
-    //void clickeitem(QModelIndex index);
 
-    void init();
     void print(QPrinter* printer);
-    QString setFilterString();
-    void SET_MODEL();
 
-    void ACTION_SELECT_TABLE();
     void ACTION_EXPORT();
     void ACTION_IMPORT();
     void ACTION_PRINT();
@@ -73,24 +86,25 @@ private slots:
     void ACTION_REGRESH();
     void ACTION_DELETEALL();
 
-    void on_BUTTON_SAVE_clicked();
-    void on_BUTTON_ABORT_clicked();
-    void on_BUTTON_ADD_clicked();
-    void on_BUTTON_REFRESH_clicked();
-    void on_BUTTON_DELETE_clicked();
-    void on_BUTTON_DELETEALL_clicked();
-    void on_BUTTON_QUERY_clicked();
-    void on_TABLEVIEW_clicked(const QModelIndex &index);
-    //void on_TABLEVIEW_doubleClicked(const QModelIndex &index);
-    void on_COMBOBOX_PAGE_SIZE_activated(const QString &arg1);
-    void on_BUTTON_FIRST_PAGE_clicked();
-    void on_BUTTON_LAST_PAGE_clicked();
-    void on_BUTTON_TURN_PAGE_clicked();
-    void on_BUTTON_PREVIOUS_PAGE_clicked();
-    void on_BUTTON_NEXT_PAGE_clicked();
-    void on_BUTTON_EXEC_SQL_clicked();
-    void on_BUTTON_TURN_TO_LEFT_TABLE_clicked();
-    void on_BUTTON_TURN_TO_RIGHT_TABLE_clicked();
+    //---------------------------------------------------------------------------
+    void on_LISTWIDGET_ONE_itemClicked(QListWidgetItem *item);
+    void init_widget();
+    void init_model(int index);
+    void init_set_model(int index);
+    QString set_filter_string(int index);
+
+    void on_TABWIDGET_currentChanged(int index);
+    void on_BUTTON_TAB_CLOSE_clicked();
+
+    void on_BUTTON_TAB_QUERY_clicked();
+    void on_TABLEVIEW_TAB_clicked(const QModelIndex &index);
+    void on_COMBOBOX_TAB_PAGE_SIZE_activated(const QString &arg1);
+    void on_BUTTON_TAB_FIRST_PAGE_clicked();
+    void on_BUTTON_TAB_LAST_PAGE_clicked();
+    void on_BUTTON_TAB_TURN_PAGE_clicked();
+    void on_BUTTON_TAB_PREVIOUS_PAGE_clicked();
+    void on_BUTTON_TAB_NEXT_PAGE_clicked();
+
 };
 
 #endif // UI_MAINWINDOW_H
