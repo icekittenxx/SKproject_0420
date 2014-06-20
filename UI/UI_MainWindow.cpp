@@ -35,6 +35,9 @@ UI_MainWindow::UI_MainWindow(QWidget *parent) :
     connect(ui->ACTION_SAVE_2, SIGNAL(triggered()), this, SLOT(ACTION_SAVE()));
     connect(ui->ACTION_PRINT_2, SIGNAL(triggered()), this, SLOT(ACTION_PRINT()));
 
+
+    connect(ui->TABWIDGET, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
+
     //-----------------------------------------------------------------------------------------------
     tabwidget_size = 0;
     sqltable_name.push_back("gaslog");
@@ -792,4 +795,10 @@ void UI_MainWindow::ACTION_DELETEALL()
     }
 
     tab_label_3[current_sqltable]->setText("/" + QString::number(tab_model_page_num_size[current_sqltable], 10));
+}
+
+void UI_MainWindow::tabCloseRequested(int index)
+{
+    tabwidget_sqltable_list.removeAt(index);
+    ui->TABWIDGET->removeTab(index);
 }

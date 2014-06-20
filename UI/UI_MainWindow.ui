@@ -416,6 +416,9 @@ QTreeView::item:selected:!active
         <property name="currentIndex">
          <number>0</number>
         </property>
+        <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
         <widget class="QWidget" name="TAB_1">
          <property name="styleSheet">
           <string notr="true"/>

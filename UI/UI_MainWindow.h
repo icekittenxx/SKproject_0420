@@ -96,6 +96,8 @@ private slots:
     void on_TABWIDGET_currentChanged(int index);
     void on_BUTTON_TAB_CLOSE_clicked();
 
+    void tabCloseRequested(int index);
+
     void on_BUTTON_TAB_QUERY_clicked();
     void on_TABLEVIEW_TAB_clicked(const QModelIndex &index);
     void on_COMBOBOX_TAB_PAGE_SIZE_activated(const QString &arg1);
